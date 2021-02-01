@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ysyg.dao.YUserLikeClothesDao">
+    
+	<sql id="yUserLikeClothesColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.c_id AS "cid.id",
+		a.create_date AS "createDate",
+		a.score AS "score",
+		a.note AS "note",
+		u2.name AS "user.name",
+		u3.name AS "cid.name"
+	</sql>
+	
+	<sql id="yUserLikeClothesJoins">
+		LEFT JOIN y_user u2 ON u2.id = a.user_id
+		LEFT JOIN y_clothes u3 ON u3.id = a.c_id
+	</sql>
+    
+	<select id="get" resultType="YUserLikeClothes">
+		SELECT 
+			<include refid="yUserLikeClothesColumns"/>
+		FROM y_user_like_clothes a
+		<include refid="yUserLikeClothesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="YUserLikeClothes">
+		SELECT 
+			<include refid="yUserLikeClothesColumns"/>
+		FROM y_user_like_clothes a
+		<include refid="yUserLikeClothesJoins"/>
+		<where>
+			
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="YUserLikeClothes">
+		SELECT 
+			<include refid="yUserLikeClothesColumns"/>
+		FROM y_user_like_clothes a
+		<include refid="yUserLikeClothesJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO y_user_like_clothes(
+			id,
+			user_id,
+			c_id,
+			create_date,
+			score,
+			note
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{cId.id},
+			#{createDate},
+			#{score},
+			#{note}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE y_user_like_clothes SET 	
+			user_id = #{user.id},
+			c_id = #{cId.id},
+			score = #{score},
+			note = #{note}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM y_user_like_clothes
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

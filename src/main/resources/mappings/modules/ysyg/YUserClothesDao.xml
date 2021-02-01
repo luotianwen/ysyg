@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.ysyg.dao.YUserClothesDao">
+    
+	<sql id="yUserClothesColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.c_id AS "c.Id",
+		a.create_date AS "createDate",
+		u2.name AS "user.name",
+		u3.name AS "c.name"
+	</sql>
+	
+	<sql id="yUserClothesJoins">
+		LEFT JOIN y_user u2 ON u2.id = a.user_id
+		LEFT JOIN y_clothes u3 ON u3.id = a.c_id
+	</sql>
+    
+	<select id="get" resultType="YUserClothes">
+		SELECT 
+			<include refid="yUserClothesColumns"/>
+		FROM y_user_clothes a
+		<include refid="yUserClothesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="YUserClothes">
+		SELECT 
+			<include refid="yUserClothesColumns"/>
+		FROM y_user_clothes a
+		<include refid="yUserClothesJoins"/>
+		<where>
+			
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="YUserClothes">
+		SELECT 
+			<include refid="yUserClothesColumns"/>
+		FROM y_user_clothes a
+		<include refid="yUserClothesJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO y_user_clothes(
+			id,
+			user_id,
+			c_id,
+			create_date
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{c.Id},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE y_user_clothes SET 	
+			user_id = #{user.id},
+			c_id = #{c.Id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM y_user_clothes
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
