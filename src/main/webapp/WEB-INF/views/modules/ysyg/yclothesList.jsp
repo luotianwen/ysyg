@@ -78,7 +78,8 @@
 					${yclothes.remarks}
 				</td>
 				<td>
-					${yclothes.pto}
+					<img width="100px" src="${yclothes.pto}">
+
 				</td>
 				<shiro:hasPermission name="ysyg:yclothes:edit"><td>
     				<a href="${ctx}/ysyg/yclothes/form?id=${yclothes.id}">修改</a>

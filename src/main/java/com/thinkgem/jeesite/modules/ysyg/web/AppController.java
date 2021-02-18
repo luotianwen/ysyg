@@ -90,7 +90,7 @@ public class AppController extends BaseController {
             List<YUserLikeClothes> gls= yUserLikeClothesService.findList(u);
             for (YUserLikeClothes g:gls
             ) {
-                u1.set(g.getCid().getName(), Integer.parseInt(g.getScore()));
+                u1.set(g.getCid().getId(), Integer.parseInt(g.getScore()));
             }
             u1.create();
         }

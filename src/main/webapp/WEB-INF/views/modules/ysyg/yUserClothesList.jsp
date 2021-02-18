@@ -19,8 +19,8 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/ysyg/yUserClothes/">我的衣服列表</a></li>
-		<shiro:hasPermission name="ysyg:yUserClothes:edit"><li><a href="${ctx}/ysyg/yUserClothes/form">我的衣服添加</a></li></shiro:hasPermission>
-	</ul>
+	<%--	<shiro:hasPermission name="ysyg:yUserClothes:edit"><li><a href="${ctx}/ysyg/yUserClothes/form">我的衣服添加</a></li></shiro:hasPermission>
+--%>	</ul>
 	<form:form id="searchForm" modelAttribute="yUserClothes" action="${ctx}/ysyg/yUserClothes/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
@@ -47,9 +47,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="yUserClothes">
 			<tr>
-				<td><a href="${ctx}/ysyg/yUserClothes/form?id=${yUserClothes.id}">
+				<td>
 					${yUserClothes.user.name}
-				</a></td>
+				 </td>
 				<td>
 					${yUserClothes.c.name}
 				</td>
@@ -57,7 +57,7 @@
 					<fmt:formatDate value="${yUserClothes.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<shiro:hasPermission name="ysyg:yUserClothes:edit"><td>
-    				<a href="${ctx}/ysyg/yUserClothes/form?id=${yUserClothes.id}">修改</a>
+    				<%--<a href="${ctx}/ysyg/yUserClothes/form?id=${yUserClothes.id}">修改</a>--%>
 					<a href="${ctx}/ysyg/yUserClothes/delete?id=${yUserClothes.id}" onclick="return confirmx('确认要删除该我的衣服吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>

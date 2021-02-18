@@ -19,8 +19,8 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/ysyg/yUserLikeClothes/">我的搭配列表</a></li>
-		<shiro:hasPermission name="ysyg:yUserLikeClothes:edit"><li><a href="${ctx}/ysyg/yUserLikeClothes/form">我的搭配添加</a></li></shiro:hasPermission>
-	</ul>
+	<%--	<shiro:hasPermission name="ysyg:yUserLikeClothes:edit"><li><a href="${ctx}/ysyg/yUserLikeClothes/form">我的搭配添加</a></li></shiro:hasPermission>
+--%>	</ul>
 	<form:form id="searchForm" modelAttribute="yUserLikeClothes" action="${ctx}/ysyg/yUserLikeClothes/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
