@@ -90,7 +90,7 @@
 					<fmt:formatDate value="${yuser.br}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					${yuser.pto}
+					<img width="100px" src="${yuser.pto}">
 				</td>
 				<td>
 					${yuser.email}

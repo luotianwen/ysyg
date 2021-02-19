@@ -1,14 +1,19 @@
 package com.thinkgem.jeesite.modules.ysyg.web;
 
+import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.FileUtils;
+import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 
+import com.thinkgem.jeesite.modules.ysyg.entity.YUserClothes;
 import com.thinkgem.jeesite.modules.ysyg.entity.YUserLikeClothes;
 import com.thinkgem.jeesite.modules.ysyg.entity.Yclothes;
 import com.thinkgem.jeesite.modules.ysyg.entity.Yuser;
+import com.thinkgem.jeesite.modules.ysyg.service.YUserClothesService;
 import com.thinkgem.jeesite.modules.ysyg.service.YUserLikeClothesService;
+import com.thinkgem.jeesite.modules.ysyg.service.YclothesService;
 import com.thinkgem.jeesite.modules.ysyg.service.YuserService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -34,7 +39,11 @@ public class AppController extends BaseController {
 
     @Autowired
     private YUserLikeClothesService yUserLikeClothesService;
+    @Autowired
+    private YclothesService yclothesService;
 
+    @Autowired
+    private YUserClothesService yUserClothesService;
     @RequestMapping(value = "login")
     @ResponseBody
     public ReqResponse<Yuser> login(Yuser user) {
@@ -56,7 +65,46 @@ public class AppController extends BaseController {
         return r;
 
     }
+    @RequestMapping(value = "yf")
+    @ResponseBody
+    public ReqResponse<List<Yclothes>> yf() {
+        ReqResponse< List<Yclothes>> r=new ReqResponse();
+        List<Yclothes> s=yclothesService.findList(new Yclothes());
+        r.setData(s);
+        return r;
 
+    }
+    @RequestMapping(value = "add")
+    @ResponseBody
+    public ReqResponse<Yuser> add(YUserLikeClothes yUserLikeClothes) {
+        ReqResponse<Yuser> r=new ReqResponse();
+
+        yUserLikeClothesService.save(yUserLikeClothes);
+        YUserClothes  yUserClothes=new YUserClothes();
+        yUserClothes.setC(yUserLikeClothes.getCid());
+        yUserClothes.setUser(yUserLikeClothes.getUser());
+        yUserClothesService.save(yUserClothes);
+
+        return r;
+
+    }
+    @RequestMapping(value = "reg")
+    @ResponseBody
+    public ReqResponse<Yuser> reg(Yuser user) {
+        ReqResponse<Yuser> r=new ReqResponse();
+        if (null == user.getAccount()||user.getAccount().equals("")||null == user.getPass()||user.getPass().equals("")) {
+            r.setCode(1);
+            r.setMsg("用户名密码不能为空");
+            return r;
+        }
+        else{
+            studentService.save(user);
+        }
+
+
+        return r;
+
+    }
     @RequestMapping(value = "update")
     @ResponseBody
     public ReqResponse<String> update(Yuser user) {
@@ -74,32 +122,49 @@ public class AppController extends BaseController {
     }
     @RequestMapping(value = "main")
     @ResponseBody
-    public ReqResponse<String> main(Yuser user) {
-        ReqResponse<String> r=new ReqResponse();
-        Yuser m2=studentService.get(user.getId());
+    public ReqResponse<MainData> main(Yuser user) {
+        ReqResponse<MainData> r=new ReqResponse();
+        MainData m=new MainData();
+        m.setGss(studentService.findList(new Yuser()));
+          if(StringUtils.isEmpty(user.getId())) {
+             m.setGqs(yclothesService.findList(new Yclothes()));
+          }
+          else {
+            Yuser m2 = studentService.get(user.getId());
 
 
-        UserSet gedanSet = new UserSet();
+            UserSet gedanSet = new UserSet();
 
-        List<YUserLikeClothes> gds= yUserLikeClothesService.findList(new YUserLikeClothes());
-        for (YUserLikeClothes u:gds
-        ) {
-            UserSet.User u1=gedanSet.put(u.getUser().getId());
-
-
-            List<YUserLikeClothes> gls= yUserLikeClothesService.findList(u);
-            for (YUserLikeClothes g:gls
+            List<YUserLikeClothes> gds = yUserLikeClothesService.findList(new YUserLikeClothes());
+            for (YUserLikeClothes u : gds
             ) {
-                u1.set(g.getCid().getId(), Integer.parseInt(g.getScore()));
-            }
-            u1.create();
-        }
-        Recommend gedanrecommend = new Recommend();
-        List<UserSet.Set> gedanrecommendations2 = gedanrecommend.recommend(user.getId(), gedanSet);
-        List<UserSet.Set> gedanrecommendations=gedanrecommendations2.subList(0, gedanrecommendations2.size()>15?15:gedanrecommendations2.size());
-        if(gedanrecommendations.size()==0){
+                UserSet.User u1 = gedanSet.put(u.getUser().getId());
 
+
+                List<YUserLikeClothes> gls = yUserLikeClothesService.findList(u);
+                for (YUserLikeClothes g : gls
+                ) {
+                    u1.set(g.getCid().getId(), Integer.parseInt(g.getScore()));
+                }
+                u1.create();
+            }
+            Recommend gedanrecommend = new Recommend();
+            List<UserSet.Set> gedanrecommendations2 = gedanrecommend.recommend(user.getId(), gedanSet);
+            List<UserSet.Set> gedanrecommendations = gedanrecommendations2.subList(0, gedanrecommendations2.size() > 15 ? 15 : gedanrecommendations2.size());
+            if (gedanrecommendations.size() == 0) {
+                //m.setGqs(yclothesService.findList(new Yclothes()));
+            }
+            else{
+                List<Yclothes> gqs= Lists.newArrayList();
+                for (UserSet.Set set : gedanrecommendations) {
+                    Yclothes yclothes=yclothesService.get(set.username);
+                    yclothes.setBofangcount(set.score);
+                    gqs.add(yclothes);
+                }
+                m.setGqs(gqs);
+            }
         }
+        r.setData(m);
         return r;
 
     }

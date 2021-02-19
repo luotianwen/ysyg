@@ -74,7 +74,7 @@
 		) VALUES (
 			#{id},
 			#{user.id},
-			#{cId.id},
+			#{cid.id},
 			#{createDate},
 			#{score},
 			#{note}
@@ -84,7 +84,7 @@
 	<update id="update">
 		UPDATE y_user_like_clothes SET 	
 			user_id = #{user.id},
-			c_id = #{cId.id},
+			c_id = #{cid.id},
 			score = #{score},
 			note = #{note}
 		WHERE id = #{id}

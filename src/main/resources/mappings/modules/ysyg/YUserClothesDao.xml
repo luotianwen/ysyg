@@ -70,7 +70,7 @@
 		) VALUES (
 			#{id},
 			#{user.id},
-			#{c.Id},
+			#{c.id},
 			#{createDate}
 		)
 	</insert>
@@ -78,7 +78,7 @@
 	<update id="update">
 		UPDATE y_user_clothes SET 	
 			user_id = #{user.id},
-			c_id = #{c.Id}
+			c_id = #{c.id}
 		WHERE id = #{id}
 	</update>
 	

@@ -78,7 +78,7 @@
 			<label class="control-label">头像：</label>
 			<div class="controls">
 				<form:hidden id="pto" path="pto" htmlEscape="false" maxlength="255" class="input-xlarge"/>
-				<sys:ckfinder input="pto" type="files" uploadPath="/ysyg/yuser" selectMultiple="true"/>
+				<sys:ckfinder input="pto" type="files" uploadPath="/ysyg/yuser" selectMultiple="false"/>
 			</div>
 		</div>
 		<div class="control-group">
