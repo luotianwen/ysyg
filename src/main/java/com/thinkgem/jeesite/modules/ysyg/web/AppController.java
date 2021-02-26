@@ -7,6 +7,8 @@ import com.thinkgem.jeesite.common.utils.FileUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 
+import com.thinkgem.jeesite.modules.sys.entity.Area;
+import com.thinkgem.jeesite.modules.sys.service.AreaService;
 import com.thinkgem.jeesite.modules.ysyg.entity.YUserClothes;
 import com.thinkgem.jeesite.modules.ysyg.entity.YUserLikeClothes;
 import com.thinkgem.jeesite.modules.ysyg.entity.Yclothes;
@@ -80,11 +82,67 @@ public class AppController extends BaseController {
         ReqResponse<Yuser> r=new ReqResponse();
 
         yUserLikeClothesService.save(yUserLikeClothes);
-        YUserClothes  yUserClothes=new YUserClothes();
-        yUserClothes.setC(yUserLikeClothes.getCid());
-        yUserClothes.setUser(yUserLikeClothes.getUser());
-        yUserClothesService.save(yUserClothes);
+      try {
+          YUserClothes yUserClothes = new YUserClothes();
+          yUserClothes.setC(yUserLikeClothes.getCid());
+          yUserClothes.setUser(yUserLikeClothes.getUser());
+          yUserClothesService.save(yUserClothes);
+          }catch (Exception e){
+              System.out.println("已经有了这个衣服");
+          }
+        return r;
 
+    }
+
+    @RequestMapping(value = "wdadd")
+    @ResponseBody
+    public ReqResponse<Yuser> wdadd(YUserLikeClothes yUserLikeClothes) {
+        ReqResponse<Yuser> r=new ReqResponse();
+        try {
+            YUserClothes yUserClothes = new YUserClothes();
+            yUserClothes.setC(yUserLikeClothes.getCid());
+            yUserClothes.setUser(yUserLikeClothes.getUser());
+            yUserClothesService.save(yUserClothes);
+        }catch (Exception e){
+            System.out.println("已经有了这个衣服");
+        }
+        return r;
+
+    }
+    @RequestMapping(value = "wddel")
+    @ResponseBody
+    public ReqResponse<Yuser> wddel(YUserClothes yUserClothes) {
+        ReqResponse<Yuser> r=new ReqResponse();
+        try {
+
+            yUserClothesService.delete(yUserClothes);
+        }catch (Exception e){
+            System.out.println("已经有了这个衣服");
+        }
+        return r;
+
+    }
+    @RequestMapping(value = "wdlist")
+    @ResponseBody
+    public ReqResponse<List<YUserClothes>> wdlist(YUserClothes yUserClothes) {
+        ReqResponse<List<YUserClothes>> r=new ReqResponse();
+
+
+           r.setData(yUserClothesService.findList(yUserClothes));
+
+        return r;
+
+    }
+    @Autowired
+    private AreaService areaService;
+
+    @RequestMapping(value = "area")
+    @ResponseBody
+    public ReqResponse<List<Area>> area() {
+        ReqResponse<List<Area>> r=new ReqResponse();
+        Area area=new Area();
+        area.setType("2");
+        r.setData(areaService.findList(area));
         return r;
 
     }
@@ -130,12 +188,12 @@ public class AppController extends BaseController {
              m.setGqs(yclothesService.findList(new Yclothes()));
           }
           else {
-            Yuser m2 = studentService.get(user.getId());
+
 
 
             UserSet gedanSet = new UserSet();
 
-            List<YUserLikeClothes> gds = yUserLikeClothesService.findList(new YUserLikeClothes());
+            List<YUserLikeClothes> gds = yUserLikeClothesService.findNOList(new YUserLikeClothes());
             for (YUserLikeClothes u : gds
             ) {
                 UserSet.User u1 = gedanSet.put(u.getUser().getId());
@@ -144,9 +202,15 @@ public class AppController extends BaseController {
                 List<YUserLikeClothes> gls = yUserLikeClothesService.findList(u);
                 for (YUserLikeClothes g : gls
                 ) {
-                    u1.set(g.getCid().getId(), Integer.parseInt(g.getScore()));
+                    YUserLikeClothes yUserLikeClothes=new YUserLikeClothes();
+                    yUserLikeClothes.setCid(g.getCid());
+                    yUserLikeClothes.setNote(user.getArea());
+                    u1.set(g.getCid().getId(),yUserLikeClothesService.findList(yUserLikeClothes).size());
                 }
-                u1.create();
+                //if(null!=gls&&gls.size()>0){
+                    u1.create();
+               // }
+
             }
             Recommend gedanrecommend = new Recommend();
             List<UserSet.Set> gedanrecommendations2 = gedanrecommend.recommend(user.getId(), gedanSet);

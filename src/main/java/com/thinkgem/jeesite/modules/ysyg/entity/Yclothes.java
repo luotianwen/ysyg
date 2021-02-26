@@ -21,7 +21,7 @@ public class Yclothes extends DataEntity<Yclothes> {
 	private String pto;		// 图片
 	private Date beginCreateDate;		// 开始 创建时间
 	private Date endCreateDate;		// 结束 创建时间
-	private int bofangcount;
+	private int bofangcount=10;
 
 	public int getBofangcount() {
 		return bofangcount;

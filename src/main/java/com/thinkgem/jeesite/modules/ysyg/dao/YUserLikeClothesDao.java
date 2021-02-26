@@ -7,6 +7,8 @@ import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.ysyg.entity.YUserLikeClothes;
 
+import java.util.List;
+
 /**
  * 我的搭配DAO接口
  * @author 我的搭配
@@ -14,5 +16,10 @@ import com.thinkgem.jeesite.modules.ysyg.entity.YUserLikeClothes;
  */
 @MyBatisDao
 public interface YUserLikeClothesDao extends CrudDao<YUserLikeClothes> {
-	
+
+    List<YUserLikeClothes> findNOList(YUserLikeClothes yu);
+
+    List<YUserLikeClothes> findunList(YUserLikeClothes u);
+
+    int findCount(YUserLikeClothes yu);
 }

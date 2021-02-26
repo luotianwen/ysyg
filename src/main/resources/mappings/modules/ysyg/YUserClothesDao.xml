@@ -5,15 +5,17 @@
 	<sql id="yUserClothesColumns">
 		a.id AS "id",
 		a.user_id AS "user.id",
-		a.c_id AS "c.Id",
+		a.c_id AS "c.id",
 		a.create_date AS "createDate",
 		u2.name AS "user.name",
-		u3.name AS "c.name"
+		u3.name AS "c.name",
+		d.label as "label"
 	</sql>
 	
 	<sql id="yUserClothesJoins">
 		LEFT JOIN y_user u2 ON u2.id = a.user_id
 		LEFT JOIN y_clothes u3 ON u3.id = a.c_id
+		LEFT JOIN sys_dict d ON d.value = u3.type
 	</sql>
     
 	<select id="get" resultType="YUserClothes">
@@ -30,9 +32,12 @@
 		FROM y_user_clothes a
 		<include refid="yUserClothesJoins"/>
 		<where>
-			
+			and d.type='clothesType'
 			<if test="createDate != null and createDate != ''">
 				AND a.create_date = #{createDate}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
 			</if>
 		</where>
 		<choose>
@@ -43,14 +48,16 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<select id="findAllList" resultType="YUserClothes">
 		SELECT 
 			<include refid="yUserClothesColumns"/>
 		FROM y_user_clothes a
 		<include refid="yUserClothesJoins"/>
 		<where>
-			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

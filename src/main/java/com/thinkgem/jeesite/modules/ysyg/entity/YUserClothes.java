@@ -17,7 +17,16 @@ public class YUserClothes extends DataEntity<YUserClothes> {
 	private static final long serialVersionUID = 1L;
 	private Yuser user;		// 用户
 	private Yclothes c;		// 衣服
-	
+	private String label;	// 标签名
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
 	public YUserClothes() {
 		super();
 	}

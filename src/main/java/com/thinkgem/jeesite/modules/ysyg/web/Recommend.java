@@ -87,7 +87,7 @@ public class Recommend {
 
 
 
-        //找到最近邻看过，但是我们没看过的，计算推荐
+        //找到最近邻的，但是我们没有的，计算推荐
         UserSet.User neighborRatings = set.getUser(nearest);
         System.out.println("neighborRatings -> " + neighborRatings.list);
 

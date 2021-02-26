@@ -25,14 +25,42 @@
 		<include refid="yUserLikeClothesJoins"/>
 		WHERE a.id = #{id}
 	</select>
-	
+
+
+	<select id="findNOList" resultType="YUserLikeClothes">
+		SELECT
+		distinct a.user_id AS "user.id"
+		FROM y_user_like_clothes a
+
+	</select>
+
+	<select id="findunList" resultType="YUserLikeClothes">
+		SELECT
+
+		a.user_id AS "user.id",
+		a.c_id AS "cid.id",
+		a.note AS "note".
+		a.score AS "score",
+		FROM y_user_like_clothes a
+			where  a.user_id = #{user.id}
+
+	</select>
+
 	<select id="findList" resultType="YUserLikeClothes">
 		SELECT 
 			<include refid="yUserLikeClothesColumns"/>
 		FROM y_user_like_clothes a
 		<include refid="yUserLikeClothesJoins"/>
 		<where>
-			
+			<if test="cid != null and cid.id != null and cid.id != ''">
+				AND a.c_id = #{cid.id}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="note != null and note != ''">
+				AND a.note = #{note}
+			</if>
 			<if test="createDate != null and createDate != ''">
 				AND a.create_date = #{createDate}
 			</if>

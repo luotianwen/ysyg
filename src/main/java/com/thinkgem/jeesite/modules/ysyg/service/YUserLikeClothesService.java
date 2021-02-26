@@ -43,5 +43,16 @@ public class YUserLikeClothesService extends CrudService<YUserLikeClothesDao, YU
 	public void delete(YUserLikeClothes yUserLikeClothes) {
 		super.delete(yUserLikeClothes);
 	}
-	
+
+    public List<YUserLikeClothes> findunList(YUserLikeClothes u) {
+		return dao.findunList(u);
+    }
+
+	public List<YUserLikeClothes> findNOList(YUserLikeClothes yu) {
+		return dao.findNOList(yu);
+	}
+
+	public int findCount(YUserLikeClothes yu) {
+		return dao.findCount(yu);
+	}
 }
